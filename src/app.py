@@ -3,6 +3,7 @@ from flask import Flask, Blueprint
 from src.api.restplus import api
 from src.shopping.groceries import GroceriesList
 from src import settings
+from src.api.endpoints.groceries_list import ns as ns_groceries_list
 
 # from rest_api_demo import settings
 # from rest_api_demo.api.blog.endpoints.posts import ns as blog_posts_namespace
@@ -32,12 +33,14 @@ def initialize_app(flask_app):
     api.init_app(blueprint)
     # api.add_namespace(blog_posts_namespace)
     # api.add_namespace(blog_categories_namespace)
+    api.add_namespace(ns_groceries_list)
     flask_app.register_blueprint(blueprint)
 
     # db.init_app(flask_app)
 
 
 def main():
+    print('main')
     initialize_app(app)
     logging.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
     app.run(debug=settings.FLASK_DEBUG)

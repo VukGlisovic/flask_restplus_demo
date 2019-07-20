@@ -1,9 +1,9 @@
 import logging
 from flask import Flask, Blueprint
-from src.api.restplus import api
+from src.backend.restplus import api
 from src.shopping.groceries import GroceriesList
 from src import settings
-from src.api.endpoints.groceries_list import ns as ns_groceries_list
+from src.backend.endpoints.groceries_list import ns as ns_groceries_list
 
 # from rest_api_demo import settings
 # from rest_api_demo.api.blog.endpoints.posts import ns as blog_posts_namespace

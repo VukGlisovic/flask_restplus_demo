@@ -1,32 +1,30 @@
-from src.app import groceries_list
+from src import app
 from src.api.restplus import api
+from src.api.models import GroceriesModel
 import flask_restplus as swagger
 
-ns = api.namespace('groceries', description='Groceries operations.')
 
-groceries_fields = {'name': swagger.fields.String(required=True, description='The product name (the unique identifier).'),
-                    'quantity': swagger.fields.Integer(required=True, description='How many of this product should be bought.')}
-groceries_model = api.model('Groceries', groceries_fields)
+ns = api.namespace('groceries', description='Groceries operations.')
 
 
 @ns.route('/')
 class GroceriesAPI(swagger.Resource):
 
-    @ns.expect(groceries_model, validate=True)  # for formatting input
-    @ns.marshal_with(groceries_model)  # for formatting output
+    @ns.expect(GroceriesModel, validate=True)  # for formatting input
+    @ns.marshal_with(GroceriesModel)  # for formatting output
     def post(self):
         """Add products to the groceries list.
         """
-        return groceries_list.add(**api.payload), 200
+        return app.grocerieslist.add(**api.payload), 200
 
     def get(self):
         """Returns groceries list.
         """
-        return groceries_list.get_list()
+        return app.grocerieslist.get_list()
 
-    @ns.expect(groceries_model, validate=True)
-    @ns.marshal_with(groceries_model)
+    @ns.expect(GroceriesModel, validate=True)
+    @ns.marshal_with(GroceriesModel)
     def delete(self):
         """Deletes a groceries from list.
         """
-        return groceries_list.remove(**api.payload)
+        return app.grocerieslist.remove(**api.payload)

@@ -10,11 +10,15 @@ from src.api.endpoints.groceries_list import ns as ns_groceries_list
 # from rest_api_demo.api.blog.endpoints.categories import ns as blog_categories_namespace
 # from rest_api_demo.api.restplus import api
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+grocerieslist = GroceriesList(add_defaults=True)
 app = Flask(__name__)
-groceries_list = GroceriesList(add_defaults=True)
 
 
 def configure_app(flask_app):
+    logging.info("Configuring app...")
     flask_app.config['SERVER_NAME'] = settings.FLASK_SERVER_NAME
 
     flask_app.config['SWAGGER_UI_DOC_EXPANSION'] = settings.RESTPLUS_SWAGGER_UI_DOC_EXPANSION
@@ -39,13 +43,14 @@ def initialize_app(flask_app):
     # db.init_app(flask_app)
 
 
-def main():
-    print('main')
-    initialize_app(app)
-    logging.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
-    app.run(debug=settings.FLASK_DEBUG)
+configure_app(app)
+logging.info("Initializing app...")
+blueprint = Blueprint('api', __name__, url_prefix='/api')
+api.init_app(blueprint)
+api.add_namespace(ns_groceries_list)
+app.register_blueprint(blueprint)
+logging.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
 
 
-print(__name__)
 if __name__ == "__main__":
-    main()
+    app.run(debug=settings.FLASK_DEBUG)

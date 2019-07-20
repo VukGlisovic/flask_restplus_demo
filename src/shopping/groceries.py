@@ -13,6 +13,15 @@ class GroceriesList(object):
             self.add('peanut butter', 5)
 
     def add(self, name, quantity, **kwargs):
+        """
+        Args:
+            name (str):
+            quantity (int):
+            **kwargs:
+
+        Returns:
+            dict
+        """
         self.check_product_exists(name, should_exist=False)
         logging.info("Adding %s times '%s' to the groceries list.", quantity, name)
         new_item = {NAME: name, INFO: {QUANTITY: quantity}}
@@ -20,26 +29,60 @@ class GroceriesList(object):
         return new_item
 
     def update(self, name, info):
+        """
+        Args:
+            name (str):
+            info (dict):
+
+        Returns:
+            dict
+        """
         product_dict = self.check_product_exists(name, should_exist=True)
         # changes original object by reference
         product_dict[INFO] = info
         return product_dict
 
     def remove(self, name):
+        """
+        Args:
+            name (str):
+
+        Returns:
+            dict
+        """
         products_dict = self.check_product_exists(name, should_exist=True)
         self.groceries.remove(products_dict)
         return products_dict
 
     def get_list(self):
+        """
+        Returns:
+            list[dict]
+        """
         logging.info("Listing all groceries.")
         return self.groceries
 
     def get_product(self, product):
+        """
+        Args:
+            product (str):
+
+        Returns:
+            dict
+        """
         logging.info("Getting product '{}'.".format(product))
         product_dict = self.check_product_exists(product, should_exist=True)
         return product_dict
 
     def check_product_exists(self, name, should_exist=True):
+        """
+        Args:
+            name (str):
+            should_exist (bool):
+
+        Returns:
+            Union[dict, None]
+        """
         product_list = [dct for dct in self.groceries if dct[NAME] == name]
         if should_exist:
             if not any(product_list):

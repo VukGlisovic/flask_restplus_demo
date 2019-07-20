@@ -1,5 +1,5 @@
 import logging
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 
 NAME = 'name'
@@ -45,6 +45,13 @@ class GroceriesList(object):
     def get_list(self):
         logging.info("Listing all groceries.")
         return self.groceries
+
+    def get_product(self, product):
+        logging.info("Getting product '{}'.".format(product))
+        quantity_dict = self.groceries.get(product)
+        if quantity_dict is None:
+            raise NotFound("No such product on shopping list: '{}'.".format(product))
+        return quantity_dict
 
     @classmethod
     def check_valid_quantity(cls, quantity):

@@ -1,21 +1,15 @@
 import logging
 from flask import Flask, Blueprint
 from src.backend.restplus import api
-from src.shopping.groceries import GroceriesList
 from src import settings
 from src.backend.endpoints.groceries_list import ns as ns_groceries_list
 from src.database import db
 from src.constants import URL_PREFIX
 
-# from rest_api_demo import settings
-# from rest_api_demo.api.blog.endpoints.posts import ns as blog_posts_namespace
-# from rest_api_demo.api.blog.endpoints.categories import ns as blog_categories_namespace
-# from rest_api_demo.api.restplus import api
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-grocerieslist = GroceriesList(add_defaults=True)
 app = Flask(__name__)
 
 
@@ -45,10 +39,6 @@ def initialize_app(flask_app):
 
 
 configure_app(app)
-# blueprint = Blueprint('api', __name__, url_prefix='/api')
-# api.init_app(blueprint)
-# api.add_namespace(ns_groceries_list)
-# app.register_blueprint(blueprint)
 initialize_app(app)
 logging.info('>>>>> Starting development server at http://{}{}/ <<<<<'.format(app.config['SERVER_NAME'], URL_PREFIX))
 

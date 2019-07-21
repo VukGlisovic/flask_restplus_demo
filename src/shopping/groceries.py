@@ -1,6 +1,19 @@
 import logging
 from werkzeug.exceptions import BadRequest, NotFound
+from sqlalchemy import exc
 from src.constants import *
+from src.database import db
+import src.database.models as db_models
+
+
+def add_product(name, quantity, category, price, **kwargs):
+    product = db_models.Product(name, quantity, category, price)
+    db.session.add(product)
+    try:
+        db.session.commit()
+    except exc.IntegrityError:
+        raise BadRequest("A product with name '{}' already exists.".format(name))
+    return product.to_api_model_dict()
 
 
 class GroceriesList(object):

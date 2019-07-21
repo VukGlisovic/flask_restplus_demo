@@ -1,4 +1,3 @@
-import logging
 from werkzeug.exceptions import BadRequest, NotFound
 from sqlalchemy import exc
 from src.database import db
@@ -37,6 +36,7 @@ def get_full_list():
     return [db_models.Product(**dict(p)).to_api_model_dict() for p in product_list]
 
 
+@catch_integrity_error
 def update_product(name, quantity, category, price, *args, **kwargs):
     check_product_exists(name, should_exist=True)
     product = db_models.Product(name, quantity, category, price)
@@ -45,6 +45,7 @@ def update_product(name, quantity, category, price, *args, **kwargs):
     return product.to_api_model_dict()
 
 
+@catch_integrity_error
 def remove_product(name):
     product = check_product_exists(name, should_exist=True)
     product_dict = product.__dict__
@@ -72,6 +73,6 @@ def check_product_exists(name, should_exist=True):
         if product is None or getattr(product, QUANTITY) == 0:
             raise NotFound("Product '{}' doesn't exist.".format(name))
     else:
-        if product is not None:
+        if product is not None and getattr(product, QUANTITY) > 0:
             raise BadRequest("Product '{}' already exists.".format(name))
     return product

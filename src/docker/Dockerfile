@@ -45,9 +45,9 @@ ENV PATH=$CONDA_DIR/bin:$PATH \
 
 RUN mkdir -p $CONDA_DIR && \
     cd /tmp && \
-    wget https://repo.continuum.io/miniconda/Miniconda2-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-    /bin/bash Miniconda2-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-    rm Miniconda2-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+    wget https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+    /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
     $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
     $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
     $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
@@ -57,7 +57,7 @@ RUN mkdir -p $CONDA_DIR && \
 
 COPY environment.yaml $HOME/
 
-RUN conda env create -f $HOME/environment.yaml --yes
+RUN conda env create -f $HOME/environment.yaml -y
 
 # app is running on port 5000
 EXPOSE 5000

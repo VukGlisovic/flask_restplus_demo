@@ -27,21 +27,22 @@ RUN apt-get update && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 
 # Install Tini: https://github.com/krallin/tini
-ENV TINI_VERSION v0.18.0
-RUN wget --quiet --no-check-certificate https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini && \
-    mv tini /usr/local/bin/tini && \
-    chmod +x /usr/local/bin/tini
-
-ENV CONDA_DIR=/opt/conda \
+ENV TINI_VERSION=v0.18.0 \
+    CONDA_DIR=/opt/conda \
     SHELL=/bin/bash \
     USER=vukglisovic \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
-ENV PATH=$CONDA_DIR/bin:$PATH \
-    HOME=/home/$USER
 
-ENV MINICONDA_VERSION=latest
+RUN wget --quiet --no-check-certificate https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini && \
+    mv tini /usr/local/bin/tini && \
+    chmod +x /usr/local/bin/tini
+
+ENV PATH=$CONDA_DIR/bin:$PATH \
+    HOME=/home/$USER \
+    MINICONDA_VERSION=latest
+
 RUN mkdir -p $CONDA_DIR && \
     cd /tmp && \
     wget https://repo.continuum.io/miniconda/Miniconda2-${MINICONDA_VERSION}-Linux-x86_64.sh && \
@@ -54,12 +55,9 @@ RUN mkdir -p $CONDA_DIR && \
     $CONDA_DIR/bin/conda clean -tipsy && \
     rm -rf $HOME/.cache/yarn
 
-RUN conda create -n swagger --yes \
-    'python=3.6' \
-    'flask'
+COPY environment.yaml $HOME/
 
-RUN /bin/bash -c ". activate swagger && \
-    pip install flask-restplus"
+RUN conda env create -f $HOME/environment.yaml --yes
 
 # app is running on port 5000
 EXPOSE 5000
@@ -69,7 +67,7 @@ WORKDIR $HOME
 ENTRYPOINT ["tini", "--"]
 # When the docker is started up, the flask app is started up: https://github.com/moby/moby/issues/21650
 ENV FLASK_APP app.py
-CMD ["/opt/conda/envs/swagger/bin/python", "-m", "flask", "run", "--host=0.0.0.0"]
+CMD ["/opt/conda/envs/swagger/bin/flask", "flask", "run", "--host=0.0.0.0"]
 
 # Add local files as late as possible to avoid cache busting
-COPY app.py shopping.py $HOME/
+COPY src/ $HOME/

@@ -1,8 +1,4 @@
-from src import app
-from src.backend.restplus import api
 from src.backend.models import *
-from src.backend.parsers import groceries_arguments
-from src.constants import *
 from src.shopping.groceries import *
 from flask import request
 import flask_restplus as swagger
@@ -35,10 +31,10 @@ class GroceriesItem(swagger.Resource):
     @ns.expect(ProductInfoModel)
     @ns.marshal_with(ProductModel)
     def put(self, product):
-        """Update product info on the groceries list.
+        """Update product info of a product.
         """
         info = request.json
-        return app.grocerieslist.update(product, info), 200
+        return update_product(product, **info), 200
 
     @ns.marshal_with(ProductModel)
     def get(self, product):
@@ -50,4 +46,4 @@ class GroceriesItem(swagger.Resource):
     def delete(self, product):
         """Deletes a groceries from list.
         """
-        return app.grocerieslist.remove(product)
+        return remove_product(product)

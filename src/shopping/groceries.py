@@ -33,6 +33,12 @@ def get_product(name):
     return db_models.Product(**dict(product)).to_api_model_dict()
 
 
+def get_full_list():
+    product_list = db.session.execute("SELECT * FROM product WHERE timestamp IN "
+                                      "(SELECT MAX(timestamp) AS max_ts FROM product GROUP BY name ORDER BY timestamp DESC)").fetchall()
+    return [db_models.Product(**dict(p)).to_api_model_dict() for p in product_list]
+
+
 def check_product_exists(name, should_exist=True):
     """
     Args:

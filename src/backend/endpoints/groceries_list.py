@@ -18,7 +18,7 @@ class GroceriesCollection(swagger.Resource):
     def get(self):
         """Returns groceries list.
         """
-        return app.grocerieslist.get_list()
+        return get_full_list()
 
 
 @ns.route('/<string:product>')

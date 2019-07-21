@@ -2,7 +2,7 @@ import logging
 from flask import Flask, Blueprint
 from src.backend.restplus import api
 from src import settings
-from src.backend.endpoints.groceries_list import ns as ns_groceries_list
+from src.backend.endpoints.namespace_groceries import ns as ns_groceries_list
 from src.database import db
 from src.constants import URL_PREFIX
 

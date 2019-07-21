@@ -6,14 +6,50 @@ from src.database import db
 import src.database.models as db_models
 
 
-def add_product(name, quantity, category, price, **kwargs):
+def catch_integrity_error(fnc):
+    def wrapper(*args, **kwargs):
+        try:
+            result = fnc(*args, **kwargs)
+        except exc.IntegrityError as e:
+            raise BadRequest(e.args[0])
+        return result
+    return wrapper
+
+
+@catch_integrity_error
+def add_product(name, quantity, category, price, *args, **kwargs):
     product = db_models.Product(name, quantity, category, price)
+    check_product_exists(name, should_exist=False)
     db.session.add(product)
-    try:
-        db.session.commit()
-    except exc.IntegrityError:
-        raise BadRequest("A product with name '{}' already exists.".format(name))
+    db.session.commit()
     return product.to_api_model_dict()
+
+
+@catch_integrity_error
+def get_product(name):
+    product = db.session.execute("SELECT * FROM product WHERE name='{}' ORDER BY timestamp DESC".format(name)).first()
+    if product is None:
+        raise BadRequest("No such product '{}'.".format(name))
+    return db_models.Product(**dict(product)).to_api_model_dict()
+
+
+def check_product_exists(name, should_exist=True):
+    """
+    Args:
+        name (str):
+        should_exist (bool):
+
+    Returns:
+        rowProxy
+    """
+    product = db_models.Product.query.filter_by(name=name).first()
+    if should_exist:
+        if product is None:
+            raise BadRequest("Product '{}' doesn't exist.".format(name))
+    else:
+        if product is not None:
+            raise BadRequest("Product '{}' already exists.".format(name))
+    return product
 
 
 class GroceriesList(object):

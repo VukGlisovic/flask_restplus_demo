@@ -44,7 +44,7 @@ class GroceriesItem(swagger.Resource):
     def get(self, product):
         """Get one product.
         """
-        return app.grocerieslist.get_product(product)
+        return get_product(product)
 
     @ns.marshal_with(ProductModel)
     def delete(self, product):

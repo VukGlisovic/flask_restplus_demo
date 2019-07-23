@@ -28,7 +28,7 @@ RUN apt-get update && \
 
 # Install Tini: https://github.com/krallin/tini
 ENV TINI_VERSION=v0.18.0 \
-    CONDA_DIR=/opt/conda \
+    CONDA_DIR=/opt/miniconda \
     SHELL=/bin/bash \
     USER=vukglisovic \
     LC_ALL=en_US.UTF-8 \
@@ -57,17 +57,18 @@ RUN mkdir -p $CONDA_DIR && \
 
 COPY environment.yaml $HOME/
 
-RUN conda env create -f $HOME/environment.yaml -y
+RUN conda env create -f $HOME/environment.yaml
 
 # app is running on port 5000
 EXPOSE 5000
-WORKDIR $HOME
 
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
 # When the docker is started up, the flask app is started up: https://github.com/moby/moby/issues/21650
 ENV FLASK_APP app.py
-CMD ["/opt/conda/envs/swagger/bin/flask", "flask", "run", "--host=0.0.0.0"]
+CMD ["/opt/miniconda/envs/swagger/bin/flask", "run", "--host=0.0.0.0"]
 
 # Add local files as late as possible to avoid cache busting
-COPY src/ $HOME/
+COPY src/ $HOME/src/
+
+WORKDIR $HOME/src

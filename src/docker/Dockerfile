@@ -57,7 +57,7 @@ RUN mkdir -p $CONDA_DIR && \
 
 COPY environment.yaml $HOME/
 
-RUN conda env create -f $HOME/environment.yaml
+RUN $CONDA_DIR/bin/conda env create -f $HOME/environment.yaml
 
 # app is running on port 5000
 EXPOSE 5000

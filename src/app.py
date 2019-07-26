@@ -1,7 +1,6 @@
 import logging
 from flask import Flask, Blueprint
 from src.backend.restplus import api
-from src.shopping.groceries import GroceriesList
 from src import settings
 from src.backend.endpoints.namespace_groceries import ns as ns_groceries_list
 from src.constants import URL_PREFIX
@@ -10,7 +9,6 @@ from src.constants import URL_PREFIX
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-grocerieslist = GroceriesList(add_defaults=True)
 app = Flask(__name__)
 
 

@@ -34,7 +34,7 @@ def initialize_app(flask_app):
 
 configure_app(app)
 initialize_app(app)
-logging.info('>>>>> Starting development server at http://{}{}/ <<<<<'.format(app.config['SERVER_NAME'], URL_PREFIX))
+logging.info('>>>>> Starting server at http://{}{}/ <<<<<'.format(app.config['SERVER_NAME'], URL_PREFIX))
 
 
 if __name__ == "__main__":

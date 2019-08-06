@@ -33,6 +33,7 @@ dependencies:
     - attrs==19.1.0
     - flask-restplus==0.12.1
     - flask-swagger==0.2.14
+    - gunicorn==19.9.0
     - jsonschema==3.0.1
     - pyrsistent==0.14.11
     - pytz==2018.9

@@ -17,6 +17,5 @@ CONTEXT_DIR="${SCRIPT_DIR}/../.."
 echo "Script dir: ${SCRIPT_DIR}"
 echo "Build context dir: ${CONTEXT_DIR}"
 
-cd ${CONTEXT_DIR}
 
-sudo docker build -t groceries_list -f ${SCRIPT_DIR}/Dockerfile .
+sudo docker build -t groceries_list -f ${SCRIPT_DIR}/Dockerfile ${CONTEXT_DIR}

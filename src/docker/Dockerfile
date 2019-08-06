@@ -65,10 +65,9 @@ EXPOSE 5000
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
 # When the docker is started up, the flask app is started up: https://github.com/moby/moby/issues/21650
-ENV FLASK_APP app.py
-CMD ["/opt/miniconda/envs/swagger/bin/flask", "run", "--host=0.0.0.0"]
+CMD ["/opt/miniconda/envs/swagger/bin/gunicorn", "--bind=0.0.0.0:5000", "src.app:app"]
 
 # Add local files as late as possible to avoid cache busting
 COPY src/ $HOME/src/
 
-WORKDIR $HOME/src
+WORKDIR $HOME

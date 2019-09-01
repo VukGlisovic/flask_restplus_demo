@@ -1,6 +1,7 @@
-import logging
-from werkzeug.exceptions import BadRequest, NotFound
 from src.constants import *
+import logging
+import datetime as dt
+from werkzeug.exceptions import BadRequest, NotFound
 
 
 class GroceriesList(object):
@@ -9,14 +10,17 @@ class GroceriesList(object):
         logging.info("Setting up groceries list.")
         self.groceries = []
         if add_defaults:
-            self.add('milk', 2)
-            self.add('peanut butter', 5)
+            self.add('milk', 2, 1.19, 'dairy', dt.datetime.utcnow())
+            self.add('peanut butter', 5, 1.99, 'other', dt.datetime.utcnow())
 
-    def add(self, name, quantity, **kwargs):
+    def add(self, name, quantity, price, category, timestamp=None, **kwargs):
         """
         Args:
             name (str):
             quantity (int):
+            price (float):
+            category (str):
+            timestamp (Union[str, dt.datetime]):
             **kwargs:
 
         Returns:
@@ -24,7 +28,9 @@ class GroceriesList(object):
         """
         self.check_product_exists(name, should_exist=False)
         logging.info("Adding %s times '%s' to the groceries list.", quantity, name)
-        new_item = {NAME: name, INFO: {QUANTITY: quantity}}
+        if not timestamp:
+            timestamp = dt.datetime.utcnow()
+        new_item = {NAME: name, INFO: {QUANTITY: quantity, PRICE: price, CATEGORY: category, TIMESTAMP: timestamp}}
         self.groceries.append(new_item)
         return new_item
 

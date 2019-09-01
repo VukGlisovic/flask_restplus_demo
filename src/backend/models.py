@@ -12,8 +12,11 @@ groceries_info_fields = {QUANTITY: swagger.fields.Integer(required=True,
                                                      min=0.,
                                                      description='Price of single unit of the product.',
                                                      example=1.5),
+                         CATEGORY: swagger.fields.String(required=True,
+                                                         enum=CATEGORIES,
+                                                         description='The category of the product.',
+                                                         example='other'),
                          TIMESTAMP: swagger.fields.DateTime(required=False,
-                                                            default=dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                                                             description='Time of buying.',
                                                             example=dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"))}
 GroceriesInfoModel = api.model('GroceriesInfo', groceries_info_fields)

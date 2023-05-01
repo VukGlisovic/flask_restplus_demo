@@ -15,7 +15,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/VukGlisovic/flask_restplus_demo",
     packages=setuptools.find_packages(where='.', exclude=["docker"]),
-    install_requires=["Flask==1.1.1", "flask-restplus==0.12.1"],
+    install_requires=["Flask==2.3.2", "flask-restplus==0.12.1"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
